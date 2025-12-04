@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+# install updates, node, awslogs, ssm
+apt-get update && apt-get install -y nodejs npm awscli
+cd /home/ubuntu
+# download artifact from S3 or clone repo (public or use pre-baked AMI)
+# git clone https://github.com/<org>/<repo>.git app || true
+# if using S3: aws s3 cp s3://bucket/app.tar.gz ./
+# start app
+cat > /etc/systemd/system/app.service <<'EOL'
+[Unit]
+Description=Simple Node App
+After=network.target
+
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/app
+ExecStart=/usr/bin/node server.js
+Restart=always
+
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+
+systemctl daemon-reload
+systemctl enable app
+systemctl start app
