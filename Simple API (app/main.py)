@@ -1,0 +1,16 @@
+from flask import Flask, jsonify
+import logging
+
+app = Flask(name)
+
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({"status": "healthy"}), 200
+
+@app.route('/api/message', methods=['GET'])
+def message():
+    return jsonify({"message": "Hello from EC2 behind ALB"}), 200
+
+if name == 'main':
+    logging.basicConfig(level=logging.INFO)
+    app.run(host='0.0.0.0', port=8080)
