@@ -1,0 +1,3 @@
+ALB_DNS=$(terraform output -raw alb_dns)
+curl -sS http://${ALB_DNS}/health | grep OK
+curl -sS http://${ALB_DNS}/ | grep "Hello from private EC2"
